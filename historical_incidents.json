@@ -1,0 +1,237 @@
+[
+  {
+    "title": "PostgreSQL Connection Exhaustion & Cascade Failure",
+    "severity": "P0",
+    "priority": "CRITICAL",
+    "confidence": 98,
+    "rootCause": "Main DB Cluster (db-primary-us-east) connection pool overflow due to slow unindexed query on relation \"orders\". Downstream services blocked waiting for pool acquisition.",
+    "summary": "The main PostgreSQL database instance is throwing connection errors. This is cascading into 502/503 errors on the Orders and Payment services, triggering a public-facing outage at the API Gateway.",
+    "evidence": [
+      "db/primary: FATAL: remaining connection slots reserved for non-replication superuser connections",
+      "svc/orders: connection timeout after 15000ms attempting to reach db/primary",
+      "lb/api-gateway: upstream pool exhausted - returning 502 Bad Gateway"
+    ],
+    "affectedServices": [
+      "Orders Service",
+      "Payment Service",
+      "API Gateway"
+    ],
+    "affectedCustomers": "Enterprise Core Segment (US-East)",
+    "businessImpact": "Checkout operations halted. Credit card authorizations failing.",
+    "revenueImpactRate": 1450,
+    "usersAffected": 42300,
+    "blastRadius": "45% of total active users blocked during checkout flow.",
+    "falsePositiveProbability": 1,
+    "timeline": [
+      {
+        "time": "05:14:10",
+        "description": "Database server db-primary-us-east CPU spiked to 98%.",
+        "type": "alert"
+      },
+      {
+        "time": "05:14:22",
+        "description": "Postgres connection pool exhausted (max_connections=250 reached).",
+        "type": "alert"
+      },
+      {
+        "time": "05:14:45",
+        "description": "Orders service throws ConnectionTimeoutException.",
+        "type": "alert"
+      },
+      {
+        "time": "05:15:02",
+        "description": "Payment service circuit breaker OPENS for payments.svc.cluster.local.",
+        "type": "alert"
+      },
+      {
+        "time": "05:15:10",
+        "description": "API Gateway returns 502 Bad Gateway to incoming checkout requests.",
+        "type": "alert"
+      },
+      {
+        "time": "05:15:30",
+        "description": "PulseControl AI correlated 14 events and declared P0 database outage.",
+        "type": "ai"
+      }
+    ],
+    "recommendedActions": "Kill long-running queries blocking the pg_stat_activity catalog, expand connection limits via config adjustments, and execute a rolling restart of downstream microservices to release stale sockets.",
+    "recoveryPlan": [
+      {
+        "command": "kubectl exec -it db-primary-0 -n database -- psql -U postgres -c \"SELECT pg_cancel_backend(pid) FROM pg_stat_activity WHERE state = 'active' AND query_start < now() - interval '2 minutes';\"",
+        "description": "Terminate all active queries running for more than 2 minutes",
+        "status": "completed",
+        "output": "$ kubectl exec -it db-primary-0 -n database -- psql -U postgres -c \"SELECT pg_cancel_backend(pid) FROM pg_stat_activity WHERE state = 'active' AND query_start < now() - interval '2 minutes';\"\n\n[SUCCESS] Operation completed.\nExit code: 0\nLogs: Tasks successfully committed. System health restored."
+      },
+      {
+        "command": "kubectl scale deployment orders-service payments-service --replicas=0 -n core",
+        "description": "Scale down core dependencies to flush active connection retries",
+        "status": "completed",
+        "output": "$ kubectl scale deployment orders-service payments-service --replicas=0 -n core\n\n[SUCCESS] Operation completed.\nExit code: 0\nLogs: Tasks successfully committed. System health restored."
+      },
+      {
+        "command": "kubectl scale deployment orders-service payments-service --replicas=4 -n core",
+        "description": "Scale up core services to start clean connection pools",
+        "status": "completed",
+        "output": "$ kubectl scale deployment orders-service payments-service --replicas=4 -n core\n\n[SUCCESS] Operation completed.\nExit code: 0\nLogs: Tasks successfully committed. System health restored."
+      },
+      {
+        "command": "kubectl rollout restart deployment api-gateway -n gateway",
+        "description": "Restart api-gateway pods to clean cached endpoints",
+        "status": "completed",
+        "output": "$ kubectl rollout restart deployment api-gateway -n gateway\n\n[SUCCESS] Operation completed.\nExit code: 0\nLogs: Tasks successfully committed. System health restored."
+      }
+    ],
+    "rollbackPlan": [
+      {
+        "command": "kubectl rollout undo deployment api-gateway -n gateway",
+        "description": "Rollback API gateway to previous revision",
+        "status": "pending",
+        "output": ""
+      }
+    ],
+    "verificationPlan": [
+      "Run curl testing command on /healthz endpoint of API Gateway",
+      "Verify connection pool usage count is below 40% using pg_stat_database metric"
+    ],
+    "id": "INC-1002",
+    "status": "resolved",
+    "mitigationProgress": 100,
+    "structuredEvidence": [
+      {
+        "timestamp": "07:23:28",
+        "provider": "logs",
+        "service": "Orders Service",
+        "event": "db/primary: FATAL: remaining connection slots reserved for non-replication superuser connections",
+        "severity": "FATAL",
+        "weight": "High",
+        "confidenceContribution": 22,
+        "explanation": "Earliest failure observed. Primary bottleneck."
+      },
+      {
+        "timestamp": "07:24:28",
+        "provider": "logs",
+        "service": "Orders Service",
+        "event": "svc/orders: connection timeout after 15000ms attempting to reach db/primary",
+        "severity": "FATAL",
+        "weight": "High",
+        "confidenceContribution": 22,
+        "explanation": "Earliest failure observed. Primary bottleneck."
+      },
+      {
+        "timestamp": "07:25:28",
+        "provider": "system",
+        "service": "Orders Service",
+        "event": "lb/api-gateway: upstream pool exhausted - returning 502 Bad Gateway",
+        "severity": "FATAL",
+        "weight": "Medium",
+        "confidenceContribution": 15,
+        "explanation": "Cascading upstream symptom."
+      }
+    ],
+    "deterministicRCA": {
+      "primaryRootCause": "Main DB Cluster (db-primary-us-east) connection pool overflow due to slow unindexed query on relation \"orders\". Downstream services blocked waiting for pool acquisition.",
+      "primaryService": "Orders Service",
+      "secondaryContributors": [
+        "Payment Service"
+      ],
+      "downstreamSymptoms": [
+        "API Gateway"
+      ],
+      "unknownFactors": [],
+      "rulesTriggered": [
+        "Temporal Ordering Alert Indexing",
+        "Topological Dependency Descent"
+      ],
+      "providerAgreement": {
+        "providers": [
+          "logs",
+          "system"
+        ],
+        "percentage": 75
+      },
+      "blastRadius": {
+        "affectedCount": 3,
+        "percentage": 50,
+        "description": "45% of total active users blocked during checkout flow."
+      }
+    },
+    "businessImpactData": {
+      "usersAffected": 42300,
+      "requestsFailed": 634500,
+      "servicesImpacted": [
+        "Orders Service",
+        "Payment Service",
+        "API Gateway"
+      ],
+      "criticality": "CRITICAL",
+      "revenueRisk": 17400,
+      "operationalSeverity": "P0",
+      "estimatedMTTR": 14,
+      "slaImpact": 0.00034,
+      "assumptions": [
+        "Baseline traffic load modeled at active telemetry rates.",
+        "Revenue risk modeling assumes a standard SRE transactional attribution model ($1450/min).",
+        "SLA impact computed relative to a rolling 30-day cluster baseline of 850,000,000 requests."
+      ]
+    },
+    "confidenceBreakdown": [
+      {
+        "source": "Docker container evidence",
+        "score": 20
+      },
+      {
+        "source": "Kubernetes orchestration metrics",
+        "score": 25
+      },
+      {
+        "source": "System host parameters",
+        "score": 18
+      },
+      {
+        "source": "Application logs traces",
+        "score": 22
+      },
+      {
+        "source": "Temporal alert correlation",
+        "score": 8
+      },
+      {
+        "source": "Topological dependency analysis",
+        "score": 3
+      }
+    ],
+    "aiValidation": {
+      "validatedStatus": "validated",
+      "validationExplanation": "Gemini validated primary root cause as: Main DB Cluster (db-primary-us-east) connection pool overflow due to slow unindexed query on relation \"orders\". Downstream services blocked waiting for pool acquisition.. Performance indicators agree with the deterministic model.",
+      "suggestedAdditionalChecks": [
+        "kubectl logs deployment/orders-service -n core",
+        "kubectl top pods -n core"
+      ],
+      "uncertaintyEstimate": "Low uncertainty (< 5% error probability)"
+    },
+    "similarIncidents": [],
+    "recoveryIntelligence": {
+      "score": 88,
+      "expectedMTTR": "4m 18s",
+      "successRate": 95,
+      "risk": "LOW",
+      "verificationSteps": [
+        "Run curl testing command on /healthz endpoint of API Gateway",
+        "Verify connection pool usage count is below 40% using pg_stat_database metric"
+      ],
+      "rollbackAvailable": true,
+      "previousRecoveries": [],
+      "explanation": {
+        "whySuggested": "Suggested because deterministic analysis isolated the root cause to socket connection pool depletion or resource locking on the Orders Service cluster.",
+        "historicalEvidence": "First of its type in active operational store. Recommendations generated using deterministic dependency rules and standard container orchestration playbooks.",
+        "similarCount": 0,
+        "assumptions": [
+          "Assumes Kubernetes API gateway for cluster-control is fully online and accepting scaling requests.",
+          "Assumes target microservice resources and limits are not hard-locked by hypervisor constraints.",
+          "Assumes socket pool exhaustion is transient and can be resolved by scaling replicas down and up."
+        ],
+        "uncertainty": "Medium uncertainty. Lacking previous resolution benchmarks for this specific cascading sequence in memory."
+      }
+    }
+  }
+]
