@@ -1,26 +1,27 @@
 <p align="center">
 
+<img src="https://img.shields.io/badge/🏆_WOW_Vizag_2026-Hackathon_Winner-FFD700?style=for-the-badge&labelColor=000000">
 <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs">
 <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white">
 <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
-<img src="https://img.shields.io/badge/Gemini-AI-blueviolet?style=for-the-badge">
+<img src="https://img.shields.io/badge/Gemini-API-blueviolet?style=for-the-badge">
 <img src="https://img.shields.io/badge/Kubernetes-Ready-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white">
 <img src="https://img.shields.io/badge/Docker-Supported-2496ED?style=for-the-badge&logo=docker&logoColor=white">
 <img src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge">
 
 </p>
 
-<h1 align="center">
-⚡ PulseControl
-</h1>
+<h1 align="center">⚡ PulseControl</h1>
+
+<h3 align="center">
+Enterprise AI Incident Intelligence Platform
+</h3>
 
 <p align="center">
 
-<b>Enterprise AI Incident Intelligence Platform</b>
+🏆 <b>Winner - GDG WOW Vizag 2026 Hackathon</b>
 
-Transforming noisy infrastructure alerts into explainable, evidence-backed incidents with AI-assisted root cause analysis, operational knowledge, recovery intelligence, and continuous learning.
-
-Built for <b>WOW Vizag 2026 Hackathon</b> 🚀
+Transforming noisy infrastructure alerts into explainable, evidence-backed incidents using deterministic root cause analysis, AI validation, operational knowledge, and recovery intelligence.
 
 </p>
 
@@ -34,155 +35,124 @@ Built for <b>WOW Vizag 2026 Hackathon</b> 🚀
 
 ---
 
-# 🧠 What is PulseControl?
+# 🏆 Hackathon Winner
 
-Modern cloud infrastructure generates thousands of alerts during a single outage.
+PulseControl was recognized as a **Winner** at the **WOW Vizag 2026 Hackathon**.
 
-A database failure can trigger:
+The project tackles one of the biggest challenges in modern Site Reliability Engineering (SRE): **Alert Fatigue**.
+
+Instead of overwhelming engineers with hundreds of infrastructure alerts, PulseControl intelligently correlates telemetry into a single explainable incident with evidence-backed reasoning, AI-assisted validation, business impact analysis, and recovery intelligence.
+
+---
+
+# 🧠 Overview
+
+Modern cloud infrastructure can generate thousands of alerts during a single production outage.
+
+Examples include:
 
 - Kubernetes Pod Restarts
+- Database Failures
 - HTTP 500 Errors
+- Redis Timeouts
 - Queue Backlogs
-- API Failures
-- Redis Errors
-- Load Balancer Alerts
-- Customer Impact
+- Network Failures
+- CPU & Memory Spikes
+- Customer Impact Signals
 
-Instead of overwhelming engineers with hundreds of notifications, **PulseControl** intelligently correlates infrastructure telemetry into a single explainable incident.
-
-Think of it as:
-
-> **Observability + Explainable AI + Operational Knowledge + Recovery Intelligence**
+PulseControl transforms this noisy telemetry into a single actionable incident.
 
 ---
 
-# 🎯 Problem Statement
-
-Site Reliability Engineers spend valuable time answering:
-
-> **"What actually broke?"**
-
-Traditional monitoring platforms show symptoms.
-
-PulseControl identifies:
-
-- Root Cause
-- Supporting Evidence
-- Timeline
-- Business Impact
-- Recovery Plan
-- Historical Similar Incidents
-
-within seconds.
-
----
-
-# ✨ Features
+# 🚀 Key Features
 
 ## 🚨 AI Incident Intelligence
 
 - Explainable Incident Correlation
-- Deterministic Root Cause Analysis
-- Evidence-backed Decisions
-- AI Validation using Gemini
+- Deterministic Root Cause Analysis (RCA)
+- Evidence Engine
 - Confidence Scoring
+- Gemini AI Validation
 
 ---
 
 ## 📊 Enterprise Dashboard
 
-- Infrastructure Health
-- Kubernetes Status
-- Docker Containers
+- Live Infrastructure Health
+- Kubernetes Monitoring
+- Docker Monitoring
 - Active Incidents
-- SLA / SLO
-- MTTR
-- Error Budget
+- MTTR Analytics
+- SLA / SLO Monitoring
+- Error Budget Tracking
 - Recovery Progress
-- Live Telemetry
 
 ---
 
-## 🔥 Incident Correlation Engine
+## 🔥 Incident Correlation
 
 Automatically groups:
 
-- Docker Logs
+- Docker Events
 - Kubernetes Events
 - Host Metrics
 - Application Logs
+- Infrastructure Alerts
 
-into a single incident.
+into one explainable incident.
 
 ---
 
-## 🧠 Explainable AI
+## 🧠 Explainable AI Pipeline
 
-PulseControl never blindly trusts AI.
-
-Pipeline:
-
+```
 Telemetry
+      │
+      ▼
+Evidence Collection
+      │
+      ▼
+Deterministic Correlation
+      │
+      ▼
+Root Cause Analysis
+      │
+      ▼
+Gemini AI Validation
+      │
+      ▼
+Recovery Intelligence
+```
 
-↓
-
-Evidence
-
-↓
-
-Deterministic Analysis
-
-↓
-
-Root Cause
-
-↓
-
-Gemini Validation
-
-↓
-
-Recovery Plan
-
-Every recommendation explains:
-
-✔ Why
-
-✔ Confidence
-
-✔ Evidence
-
-✔ Alternative Hypotheses
+> AI never invents incidents. It validates deterministic findings using collected evidence.
 
 ---
 
 ## 🎬 Cinematic Incident Replay
 
-Replay production incidents like a movie.
+Replay production incidents with:
 
-Features:
-
-- Timeline Playback
-- Live Metrics
-- Log Replay
-- Blast Radius Animation
-- Topology Updates
-- Recovery Progress
-
----
-
-## 🌐 Interactive Service Topology
-
-Visualize:
-
-- Service Dependencies
-- Infrastructure
+- Timeline Visualization
+- Logs
+- Metrics
 - Blast Radius
-- Downstream Failures
+- Recovery Progress
+- Animated Service Topology
 
 ---
 
-## 📈 Business Impact Estimation
+## 🌐 Service Topology
+
+Interactive dependency graph showing:
+
+- Service Health
+- Blast Radius
+- Downstream Impact
+- Infrastructure Relationships
+
+---
+
+## 📈 Business Impact Engine
 
 Estimate:
 
@@ -191,7 +161,7 @@ Estimate:
 - Revenue Risk
 - SLA Impact
 - Operational Severity
-- MTTR
+- Estimated MTTR
 
 ---
 
@@ -200,20 +170,18 @@ Estimate:
 Automatically stores:
 
 - Historical Incidents
-- Recovery Outcomes
 - Root Causes
-- Evidence
+- Supporting Evidence
+- Recovery Outcomes
 - Runbooks
 
-Future incidents become smarter using operational history.
+Future incidents leverage operational history for faster resolution.
 
 ---
 
 ## 🕸 Incident Relationship Graph
 
-Understand how incidents relate.
-
-Supports:
+Visualize relationships including:
 
 - CAUSES
 - TRIGGERED
@@ -226,19 +194,19 @@ Supports:
 
 ## 🤖 AI Copilot
 
-Ask:
+Generate:
 
-- Why did this happen?
-- Explain this log.
-- Generate Kubernetes commands.
-- Suggest Terraform fixes.
-- Estimate recovery time.
+- Kubernetes Commands
+- Recovery Plans
+- Infrastructure Explanations
+- Incident Summaries
+- Troubleshooting Guidance
 
 ---
 
 ## 🎙 Voice Dispatch
 
-Supports:
+Supports multilingual incident announcements:
 
 - 🇺🇸 English
 - 🇮🇳 Telugu
@@ -250,18 +218,15 @@ Critical incidents can be announced using speech synthesis.
 
 ## 🎯 Judge Mode
 
-One-click automated demo.
+One-click demonstration that automatically performs:
 
-Automatically:
-
-- Generates telemetry
-- Creates outage
-- Correlates alerts
-- Finds root cause
-- Explains reasoning
-- Generates recovery
-- Replays incident
-- Learns from history
+- Alert Storm Simulation
+- Incident Correlation
+- Root Cause Analysis
+- AI Validation
+- Incident Replay
+- Recovery Execution
+- Knowledge Learning
 
 Perfect for hackathon demonstrations.
 
@@ -302,9 +267,9 @@ Continuous Learning
 
 ---
 
-# ⚙ Tech Stack
+# ⚙️ Tech Stack
 
-### Frontend
+## Frontend
 
 - Next.js 16
 - React 19
@@ -315,72 +280,42 @@ Continuous Learning
 
 ---
 
-### Backend
+## Backend
 
 - Next.js API Routes
 - Gemini AI
 - Custom Correlation Engine
-- Deterministic RCA
 - Evidence Engine
+- Deterministic RCA
 
 ---
 
-### Infrastructure
+## Infrastructure
 
 - Docker
 - Kubernetes
-- Local Host Metrics
+- Host Metrics
 - Application Logs
-
----
-
-### AI
-
-- Gemini 2.5 Flash
-- Explainable AI
-- Evidence Validation
-- Recovery Generation
-
----
-
-# 📂 Project Structure
-
-```text
-app/
-components/
-context/
-lib/
-├── collectors/
-├── correlation-engine/
-├── telemetry-system.ts
-public/
-```
 
 ---
 
 # 🚀 Getting Started
 
-Clone repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/rishee01/gdg_wow_vizag_2026.git
-```
 
-Move into project
-
-```bash
 cd gdg_wow_vizag_2026
 ```
 
-Install dependencies
+## Install Dependencies
 
 ```bash
 npm install
 ```
 
----
-
-# ▶ Run Locally
+## Run Development Server
 
 ```bash
 npm run dev
@@ -398,80 +333,42 @@ npm start
 
 ---
 
-# 📊 Core Modules
-
-- Dashboard
-- Alerts
-- Incidents
-- Incident Graph
-- Infrastructure
-- Topology
-- AI Copilot
-- Analytics
-- Operational Knowledge
-- Runbooks
-- Audit Logs
-- Settings
-
----
-
-# 🚀 Roadmap
-
-- OpenTelemetry Integration
-- Prometheus Support
-- Grafana Integration
-- Cloud Monitoring
-- Agent-based Architecture
-- Multi-cluster Support
-- Multi-tenancy
-- Predictive Incident Detection
-- Autonomous Remediation Approval
-- Enterprise RBAC
-
----
-
-# 🏆 Hackathon
-
-Built for
-
-**WOW Vizag 2026**
-
-Category:
-
-**AI + Cloud + DevOps**
-
----
-
 # 👨‍💻 Team
 
-**Maharishee ambati**
+### Maharishee Ambati
 
-**Alluri Ram Roshith**
+• Full Stack Developer • Devops Engineer
 
-Passionate about:
+### Alluri Ram Roshith
 
-- Cloud Engineering
-- DevOps
-- AI Systems
-- Site Reliability Engineering
-- Enterprise Software
+• Python Developer
 
 ---
 
-# ⭐ Support
+# 🏅 Achievement
 
-If you found this project interesting,
+🏆 **Winner - WOW Vizag 2026 Hackathon**
 
-⭐ Star the repository
+**Category**
 
-🍴 Fork it
+• Cloud • DevOps
 
-🚀 Share it with your friends
+PulseControl was built during the WOW Vizag 2026 Hackathon and recognized as one of the winning projects for its innovative approach to explainable AI, deterministic incident correlation, and intelligent operational workflows.
+
+---
+
+# 📜 License
+
+Licensed under the **MIT License**.
 
 ---
 
 <p align="center">
 
-Built with ❤️ for the WOW Vizag 2026 Hackathon
+🏆 Winner - GDG WOW Vizag 2026 Hackathon
+
+Built with ❤️ by <b>Maharishee ambati</b>
+
+⭐ If you found this project interesting, please consider starring the repository.
 
 </p>
